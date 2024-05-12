@@ -109,18 +109,6 @@ download \
   "https://github.com/Haivision/srt/archive/refs/tags/"
 
 download \
-  "x264-stable.tar.gz" \
-  "" \
-  "nil" \
-  "https://code.videolan.org/videolan/x264/-/archive/stable/"
-
-download \
-  "x265_3.4.tar.gz" \
-  "" \
-  "e37b91c1c114f8815a3f46f039fe79b5" \
-  "http://download.openpkg.org/components/cache/x265/"
-
-download \
   "v0.1.6.tar.gz" \
   "fdk-aac.tar.gz" \
   "223d5f579d29fb0d019a775da4e0e061" \
@@ -128,9 +116,9 @@ download \
 
 # libass dependency
 download \
-  "harfbuzz-1.4.6.tar.bz2" \
+  "harfbuzz-2.6.7.tar.xz" \
   "" \
-  "e246c08a3bac98e31e731b2a1bf97edf" \
+  "3b884586a09328c5fae76d8c200b0e1c" \
   "https://www.freedesktop.org/software/harfbuzz/release/"
 
 download \
@@ -140,10 +128,10 @@ download \
   "https://github.com/fribidi/fribidi/releases/download/v1.0.2/"
 
 download \
-  "0.13.6.tar.gz" \
-  "libass-0.13.6.tar.gz" \
-  "nil" \
-  "https://github.com/libass/libass/archive/"
+  "libass-0.17.0.tar.xz" \
+  "" \
+  "25f7435779aa28eb7dbd3f76f4d17d15" \
+  "https://github.com/libass/libass/releases/download/0.17.0/"
 
 download \
   "lame-3.99.5.tar.gz" \
@@ -158,9 +146,9 @@ download \
   "https://github.com/xiph/opus/releases/download/v1.1.2"
 
 download \
-  "v1.6.1.tar.gz" \
-  "vpx-1.6.1.tar.gz" \
-  "b0925c8266e2859311860db5d76d1671" \
+  "v1.14.0.tar.gz" \
+  "vpx-1.14.0.tar.gz" \
+  "026bc289d916624dabdfd713c1c5b69a" \
   "https://github.com/webmproject/libvpx/archive"
 
 download \
@@ -194,9 +182,9 @@ download \
   "https://github.com/uclouvain/openjpeg/archive/"
 
 download \
-  "v0.6.1.tar.gz" \
-  "libwebp-0.6.1.tar.gz" \
-  "1c3099cd2656d0d80d3550ee29fc0f28" \
+  "v1.4.0.tar.gz" \
+  "libwebp-1.4.0.tar.gz" \
+  "9778f9be63f04f16f9ca3a4f36503399" \
   "https://github.com/webmproject/libwebp/archive/"
 
 download \
@@ -228,6 +216,61 @@ download \
   "SDL2-2.0.22.tar.gz" \
   "40aedb499cb2b6f106d909d9d97f869a" \
   "https://github.com/libsdl-org/SDL/releases/download/release-2.0.22"
+
+download \
+  "freetype-2.13.0.tar.gz" \
+  "" \
+  "98bc3cf234fe88ef3cf24569251fe0a4" \
+  "https://download.savannah.gnu.org/releases/freetype/"
+
+
+download \
+  "fontconfig-2.14.2.tar.gz" \
+  "" \
+  "c5536d897c5d52422a00ecee742ccf47" \
+  "https://www.freedesktop.org/software/fontconfig/release/"
+
+download \
+  "glib-2.80.1.tar.xz" \
+  "" \
+  "a136e66c287b4eb1bf10accb03477b6f" \
+  "https://download.gnome.org/sources/glib/2.80/"
+
+download \
+  "pcre2-10.43.tar.bz2" \
+  "" \
+  "c8e2043cbc4abb80e76dba323f7c409f" \
+  "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.43/"
+
+download \
+  "v1.1.0.tar.gz" \
+  "brotli-v1.1.0.tar.gz" \
+  "6a3dba82a3604792d3cb0bd41bca60" \
+  "https://github.com/google/brotli/archive/refs/tags/"
+
+download \
+  "expat-2.6.2.tar.gz" \
+  "" \
+  "6a3dba82a3604792d3cb0bd41bca60" \
+  "https://github.com/libexpat/libexpat/releases/download/R_2_6_2/"
+
+download \
+  "bzip2-1.0.8.tar.gz" \
+  "" \
+  "6a3dba82a3604792d3cb0bd41bca60" \
+  "https://sourceware.org/pub/bzip2/"
+
+download \
+  "libpng-1.6.43.tar.gz" \
+  "" \
+  "6a3dba82a3604792d3cb0bd41bca60" \
+  "https://sourceforge.net/projects/libpng/files/libpng16/1.6.43/"
+
+download \
+  "libtheora-1.1.1.tar.xz" \
+  "" \
+  "" \
+  "https://downloads.xiph.org/releases/theora/"
 
 [ $download_only -eq 1 ] && exit 0
 
@@ -273,22 +316,6 @@ fi
 PATH="$BIN_DIR:$PATH" make -j $jval
 make install
 
-echo "*** Building x264 ***"
-cd $BUILD_DIR/x264*
-[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
-[ ! -f config.status ] && PATH="$BIN_DIR:$PATH" ./configure --prefix=$TARGET_DIR --enable-static --disable-shared --disable-opencl --enable-pic
-PATH="$BIN_DIR:$PATH" make -j $jval
-make install
-
-echo "*** Building x265 ***"
-cd $BUILD_DIR/x265*
-cd build/linux
-[ $rebuild -eq 1 ] && find . -mindepth 1 ! -name 'make-Makefiles.bash' -and ! -name 'multilib.sh' -exec rm -r {} +
-PATH="$BIN_DIR:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DENABLE_SHARED:BOOL=OFF -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc
-make -j $jval
-make install
-
 echo "*** Building fdk-aac ***"
 cd $BUILD_DIR/fdk-aac*
 [ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
@@ -314,7 +341,6 @@ make install
 echo "*** Building libass ***"
 cd $BUILD_DIR/libass-*
 [ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
-./autogen.sh
 ./configure --prefix=$TARGET_DIR --disable-shared
 make -j $jval
 make install
@@ -361,18 +387,6 @@ echo "*** Building libsoxr ***"
 cd $BUILD_DIR/soxr-*
 [ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
 PATH="$BIN_DIR:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DBUILD_SHARED_LIBS:bool=off -DWITH_OPENMP:bool=off -DBUILD_TESTS:bool=off
-make -j $jval
-make install
-
-echo "*** Building libvidstab ***"
-cd $BUILD_DIR/vid.stab-release-*
-[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
-if [ "$platform" = "linux" ]; then
-  sed -i "s/vidstab SHARED/vidstab STATIC/" ./CMakeLists.txt
-elif [ "$platform" = "darwin" ]; then
-  sed -i "s/vidstab SHARED/vidstab STATIC/" ./CMakeLists.txt
-fi
-PATH="$BIN_DIR:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR"
 make -j $jval
 make install
 
@@ -456,94 +470,100 @@ sed -i 's/-lgcc_s/-lgcc_eh/g' srt.pc
 make
 make install
 
+echo "*** Building FreeType ***"
+cd $BUILD_DIR/freetype*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+./autogen.sh
+./configure --prefix=$TARGET_DIR --disable-shared
+make
+make install
+
+echo "*** Building fontconfig ***"
+cd $BUILD_DIR/fontconfig*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+./configure --prefix=$TARGET_DIR --disable-shared
+make
+make install
+
+echo "*** Building PCRE2 ***"
+cd $BUILD_DIR/pcre2*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+./configure --prefix=$TARGET_DIR --disable-shared
+make
+make install
+
+echo "*** Building brotli ***"
+cd $BUILD_DIR/brotli*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+mkdir -p build
+cd build
+cmake -DENABLE_APPS=OFF -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DBUILD_SHARED_LIBS:bool=off ..
+make
+make install
+
+echo "*** Building libexpat ***"
+cd $BUILD_DIR/expat*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+./configure --prefix=$TARGET_DIR --disable-shared
+make -j $jval
+make install
+
+echo "*** Building bzip2 ***"
+cd $BUILD_DIR/bzip2*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+make
+make install PREFIX="$TARGET_DIR"
+
+echo "*** Building libpng ***"
+cd $BUILD_DIR/libpng*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+./configure --prefix=$TARGET_DIR --disable-shared
+make -j $jval
+make install
+
+echo "*** Building libtheora ***"
+cd $BUILD_DIR/libtheora*
+[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
+sed -i 's/png_sizeof/sizeof/g' examples/png2theora.c
+./configure --prefix=$TARGET_DIR --disable-shared
+make -j $jval
+make install
+
 # FFMpeg
 echo "*** Building FFmpeg ***"
+
 cd $BUILD_DIR/FFmpeg*
 [ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
 
-if [ "$platform" = "linux" ]; then
-  [ ! -f config.status ] && PATH="$BIN_DIR:$PATH" \
-  PKG_CONFIG_PATH="$TARGET_DIR/lib/pkgconfig" ./configure \
-    --prefix="$TARGET_DIR" \
-    --pkg-config-flags="--static" \
-    --extra-cflags="-I$TARGET_DIR/include" \
-    --extra-ldflags="-L$TARGET_DIR/lib" \
-    --extra-libs="-lpthread -lm -lz" \
-    --extra-ldexeflags="-static" \
-    --bindir="$BIN_DIR" \
-    --enable-pic \
-    --enable-ffplay \
-    --enable-fontconfig \
-    --enable-frei0r \
-    --enable-gpl \
-    --enable-version3 \
-    --enable-libass \
-    --enable-libfribidi \
-    --enable-libfdk-aac \
-    --enable-libfreetype \
-    --enable-libmp3lame \
-    --enable-libopencore-amrnb \
-    --enable-libopencore-amrwb \
-    --enable-libopenjpeg \
-    --enable-libopus \
-    --enable-librtmp \
-    --enable-libsoxr \
-    --enable-libspeex \
-    --enable-libtheora \
-    --enable-libvidstab \
-    --enable-libvo-amrwbenc \
-    --enable-libvorbis \
-    --enable-libvpx \
-    --enable-libwebp \
-    --enable-libx264 \
-    --enable-libx265 \
-    --enable-libxvid \
-    --enable-libzimg \
-    --enable-nonfree \
-    --enable-openssl \
-    --enable-librist \
-    --enable-libsrt
-elif [ "$platform" = "darwin" ]; then
-  [ ! -f config.status ] && PATH="$BIN_DIR:$PATH" \
-  PKG_CONFIG_PATH="${TARGET_DIR}/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/local/Cellar/openssl/1.0.2o_1/lib/pkgconfig" ./configure \
-    --cc=/usr/bin/clang \
-    --prefix="$TARGET_DIR" \
-    --pkg-config-flags="--static" \
-    --extra-cflags="-I$TARGET_DIR/include" \
-    --extra-ldflags="-L$TARGET_DIR/lib" \
-    --extra-ldexeflags="-Bstatic" \
-    --bindir="$BIN_DIR" \
-    --enable-pic \
-    --enable-ffplay \
-    --enable-fontconfig \
-    --enable-frei0r \
-    --enable-gpl \
-    --enable-version3 \
-    --enable-libass \
-    --enable-libfribidi \
-    --enable-libfdk-aac \
-    --enable-libfreetype \
-    --enable-libmp3lame \
-    --enable-libopencore-amrnb \
-    --enable-libopencore-amrwb \
-    --enable-libopenjpeg \
-    --enable-libopus \
-    --enable-librtmp \
-    --enable-libsoxr \
-    --enable-libspeex \
-    --enable-libvidstab \
-    --enable-libvorbis \
-    --enable-libvpx \
-    --enable-libwebp \
-    --enable-libx264 \
-    --enable-libx265 \
-    --enable-libxvid \
-    --enable-libzimg \
-    --enable-nonfree \
-    --enable-openssl \
-    --enable-librist \
-    --enable-libsrt
-fi
+[ ! -f config.status ] && PATH="$BIN_DIR:$PATH" \
+  PKG_CONFIG_PATH="$TARGET_DIR/lib/pkgconfig:$TARGET_DIR/lib64/pkgconfig" ./configure \
+  --prefix="$TARGET_DIR" \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I$TARGET_DIR/include" \
+  --extra-ldflags="-L$TARGET_DIR/lib -L$TARGET_DIR/lib64 -L/usr/lib/gcc/x86_64-amazon-linux/11/" \
+  --extra-libs="-lpthread -lm -lz" \
+  --extra-ldexeflags="-static" \
+  --bindir="$BIN_DIR" \
+  --enable-pic \
+  --enable-ffplay \
+  --enable-fontconfig \
+  --enable-libass \
+  --enable-libfribidi \
+  --enable-libfdk-aac \
+  --enable-libfreetype \
+  --enable-libmp3lame \
+  --enable-libopenjpeg \
+  --enable-libopus \
+  --enable-librtmp \
+  --enable-libsoxr \
+  --enable-libspeex \
+  --enable-libtheora \
+  --enable-libvorbis \
+  --enable-libvpx \
+  --enable-libwebp \
+  --enable-libzimg \
+  --enable-openssl \
+  --enable-librist
 
 PATH="$BIN_DIR:$PATH" make -j $jval
 make install
